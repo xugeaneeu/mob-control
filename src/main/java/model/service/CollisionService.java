@@ -1,10 +1,18 @@
 package model.service;
 
 import model.entity.*;
+import util.event.EventBus;
+import util.event.RelocateEvent;
 
 import java.util.List;
 
 public class CollisionService {
+  private final EventBus eventBus;
+
+  public CollisionService(EventBus eventBus) {
+    this.eventBus = eventBus;
+  }
+
   public void processCollision(List<Entity> entities) {
     int amountOfEntities = entities.size();
 
@@ -32,11 +40,13 @@ public class CollisionService {
         if (e1 instanceof Unit un && e2 instanceof Enemy en ) {
           un.toDestroy();
           en.toDestroy();
+          eventBus.publish(new RelocateEvent());
           continue;
         }
         if (e2 instanceof Unit un && e1 instanceof Enemy en ) {
           un.toDestroy();
           en.toDestroy();
+          eventBus.publish(new RelocateEvent());
           continue;
         }
 

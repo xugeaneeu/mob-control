@@ -8,11 +8,23 @@ import model.entity.Unit;
 import util.BonusType;
 import util.GameSettings;
 import util.Vector2D;
+import util.event.GameOverEvent;
+import util.event.RelocateEvent;
 
 import java.util.Random;
 
 public class SpawnerService {
   private final Random rnd = new Random();
+  private final GameModel model;
+
+  public SpawnerService(GameModel model) {
+    this.model = model;
+    model.getEventBus().addSubscriber(event -> {
+      if (event instanceof RelocateEvent) {
+        needRelocate = true;
+      }
+    });
+  }
 
   private final double enemyDiameter = 2 * GameSettings.ENEMY_RADIUS;
   private final double unitDiameter = 2 * GameSettings.UNIT_RADIUS;
@@ -23,6 +35,9 @@ public class SpawnerService {
   private final double enemySpawnInterval = (double)(2 * GameSettings.ENEMY_RADIUS) / GameSettings.ENEMY_SPEED;
 
   private double bonusSpawnAccumulator = 0.0;
+
+  private boolean needRelocate = false;
+  private double relocationTimer = 0.0;
 
   public void spawnEnemyLine(GameModel model) {
     int count = (int) (GameSettings.WORLD_WIDTH * 0.5 / enemyDiameter);
@@ -35,7 +50,7 @@ public class SpawnerService {
     }
   }
 
-  public void spawnBonus(GameModel model, BonusType type) {
+  public void spawnBonus(BonusType type) {
     Vector2D offset = new Vector2D(rnd.nextDouble() * ((double) GameSettings.WORLD_WIDTH/2 - 2*GameSettings.BONUS_RADIUS), 0);
     Vector2D position = GameSettings.BONUS_START_VECTOR.add(offset);
     Vector2D velocity = new Vector2D(0, GameSettings.BONUS_SPEED);
@@ -47,7 +62,7 @@ public class SpawnerService {
     curCol = (aliveUnits-1) % GameSettings.MAX_UNITS_COLUMN;
   }
 
-  public void spawnUnits(GameModel model, int amountOfUnits) {
+  public void spawnUnits(int amountOfUnits) {
     Entity headUnit = model.getHeadUnit();
     Vector2D headPos = (headUnit == null) ? GameSettings.UNIT_START_VECTOR : headUnit.getPosition();
     int aliveUnits = model.countUnits();
@@ -73,12 +88,27 @@ public class SpawnerService {
     }
   }
 
-  public void initSpawn(GameModel model) {
+  public void initSpawn() {
     int initAmountOfUnits = GameSettings.INIT_UNITS; //TODO: get from game state (specified by level)
-    spawnUnits(model, initAmountOfUnits);
+    spawnUnits(initAmountOfUnits);
   }
 
-  public void update(double dt, GameModel model) {
+  private void relocateUnits() {
+    int amountOfUnits = model.countUnits();
+    if (amountOfUnits == 0) {
+      model.getEventBus().publish(new GameOverEvent());
+    }
+    Vector2D headPos = model.getHeadUnit().getPosition();
+
+    for (Entity e : model.getEntities()) {
+      if (e instanceof Unit) e.toDestroy();
+    }
+
+    model.addEntity(new Unit(headPos, model.getEventBus()));
+    spawnUnits(amountOfUnits-1);
+  }
+
+  public void update(double dt) {
     enemySpawnAccumulator += dt;
     if (enemySpawnAccumulator >= enemySpawnInterval) {
       enemySpawnAccumulator -= enemySpawnInterval;
@@ -89,7 +119,16 @@ public class SpawnerService {
     if (bonusSpawnAccumulator >= GameSettings.BONUS_SPAWN_INTERVAL) {
       bonusSpawnAccumulator -= GameSettings.BONUS_SPAWN_INTERVAL;
       BonusType nextBonus = rnd.nextBoolean() ? BonusType.INCREASE_FIRE_RATE : BonusType.ADD_UNIT;
-      spawnBonus(model, nextBonus);
+      spawnBonus(nextBonus);
+    }
+
+    if (needRelocate) {
+      relocationTimer += dt;
+      if (relocationTimer >= GameSettings.RELOCATION_TIME) {
+        relocateUnits();
+        needRelocate = false;
+        relocationTimer = 0.0;
+      }
     }
   }
 }

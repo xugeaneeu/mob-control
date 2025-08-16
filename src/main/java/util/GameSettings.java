@@ -11,6 +11,7 @@ public class GameSettings {
   public static final Vector2D UNIT_START_VECTOR = new Vector2D(((double)GameSettings.WORLD_WIDTH/4)*3,
                                                                 ((double)GameSettings.WORLD_HEIGHT/5)*4);
   public static final int MAX_UNITS_COLUMN = 6;
+  public static final double RELOCATION_TIME = 3.0;
 
   public static int ENEMY_RADIUS = 10; //TODO: set radius
   public static int ENEMY_SPEED = 30; //TODO: set speed

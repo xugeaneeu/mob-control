@@ -6,6 +6,7 @@ import util.Vector2D;
 import util.event.AddUnitsEvent;
 import util.event.EventBus;
 import util.event.IncreaseFireRateEvent;
+import util.event.RelocateEvent;
 
 public class Bonus extends Entity {
   public final BonusType type;
@@ -48,6 +49,7 @@ public class Bonus extends Entity {
       case INCREASE_FIRE_RATE:
         if (counter < GameSettings.BONUS_HEALTH) {
           un.toDestroy();
+          eventBus.publish(new RelocateEvent());
         }
         break;
       case ADD_UNIT:

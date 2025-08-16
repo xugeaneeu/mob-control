@@ -13,7 +13,9 @@ public class Bullet extends Entity {
 
   @Override
   protected void onUpdate(double dt) {
-    //nothing here, just movement according to velocity
+    if (this.position.y() < 0) {
+      this.toDestroy();
+    }
   }
 
   //TODO: refactor later according to bullet level

@@ -6,10 +6,7 @@ import model.entity.Unit;
 import model.service.CollisionService;
 import model.service.SpawnerService;
 import util.GameSettings;
-import util.event.AddUnitsEvent;
-import util.event.EventBus;
-import util.event.IncreaseFireRateEvent;
-import util.event.ShootEvent;
+import util.event.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,8 +14,8 @@ import java.util.List;
 public class GameModel {
   private final List<Entity> entities = new ArrayList<>();
   private final EventBus eventBus = new EventBus();
-  SpawnerService spawner = new SpawnerService();
-  CollisionService collision = new CollisionService();
+  SpawnerService spawner = new SpawnerService(this);
+  CollisionService collision = new CollisionService(eventBus);
 
   public GameModel() {
     eventBus.addSubscriber(event -> {
@@ -36,11 +33,18 @@ public class GameModel {
     eventBus.addSubscriber(event -> {
       if (event instanceof AddUnitsEvent auEvent) {
         System.out.println("I will spawn " + auEvent.amountOfUnits + " units");
-        spawner.spawnUnits(this, auEvent.amountOfUnits);
+        spawner.spawnUnits(auEvent.amountOfUnits);
       }
     });
 
-    spawner.initSpawn(this);
+    eventBus.addSubscriber(event -> {
+      if (event instanceof GameOverEvent) {
+        System.out.println("Game over");
+        // TODO: when state machine is ready, change state in GameController or MainApp idk
+      }
+    });
+
+    spawner.initSpawn();
   }
 
   public void addEntity(Entity entity) {entities.add(entity);}
@@ -65,8 +69,7 @@ public class GameModel {
   public EventBus getEventBus() {return eventBus;}
 
   public void update(double dt) {
-//    System.out.println(dt);
-    spawner.update(dt, this);
+    spawner.update(dt);
 
     for (Entity entity : new ArrayList<>(entities)) {
       if (entity.isAlive()) entity.update(dt);
