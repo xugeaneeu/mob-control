@@ -44,6 +44,20 @@ public class GameModel {
       }
     });
 
+    eventBus.addSubscriber(event -> {
+      if (event instanceof KillUnitsEvent kue) {
+        int toKill = kue.amount;
+        for (int i = entities.size() - 1; i >= 0 && toKill > 0; i--) {
+          Entity e = entities.get(i);
+          if (e instanceof Unit) {
+            e.toDestroy();
+            toKill--;
+          }
+        }
+        eventBus.publish(new RelocateEvent());
+      }
+    });
+
     spawner.initSpawn();
   }
 

@@ -3,10 +3,7 @@ package model.entity;
 import util.BonusType;
 import util.GameSettings;
 import util.Vector2D;
-import util.event.AddUnitsEvent;
-import util.event.EventBus;
-import util.event.IncreaseFireRateEvent;
-import util.event.RelocateEvent;
+import util.event.*;
 
 public class Bonus extends Entity {
   public final BonusType type;
@@ -57,7 +54,7 @@ public class Bonus extends Entity {
         break;
       case ADD_UNIT:
         if (counter < 0) {
-          // TODO: publish delete -counter units and relocate event
+          eventBus.publish(new KillUnitsEvent(-counter));
           this.toDestroy();
         }
         if (counter >= 0) {
