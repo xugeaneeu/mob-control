@@ -22,6 +22,9 @@ public class Bonus extends Entity {
         break;
       case ADD_UNIT:
         counter = GameSettings.BONUS_START_COUNTER;
+        break;
+      case ATTACK_BONUS:
+        this.radius = GameSettings.BONUS_ATTACK_RADIUS;
     }
   }
 
@@ -53,7 +56,10 @@ public class Bonus extends Entity {
         }
         break;
       case ADD_UNIT:
-        // TODO: realloc if counter < 0
+        if (counter < 0) {
+          // TODO: publish delete -counter units and relocate event
+          this.toDestroy();
+        }
         if (counter >= 0) {
           eventBus.publish(new AddUnitsEvent(counter));
           this.toDestroy();

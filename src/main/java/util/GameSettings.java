@@ -13,14 +13,15 @@ public class GameSettings {
   public static final int MAX_UNITS_COLUMN = 6;
   public static final double RELOCATION_TIME = 3.0;
 
-  public static int ENEMY_RADIUS = 10; //TODO: set radius
-  public static int ENEMY_SPEED = 30; //TODO: set speed
+  public static final int ENEMY_RADIUS = 10;
+  public static final int ENEMY_SPEED = 30;
 
-  public static int BULLET_RADIUS = 10; //TODO: set radius
-  public static int BULLET_SPEED = 400; //TODO: set speed
-  public static int BULLET_DAMAGE = 1; //TODO: set damage
+  public static final int BULLET_RADIUS = 5;
+  public static int BULLET_SPEED = 400;
+  public static int BULLET_DAMAGE = 1;
 
-  public static int BONUS_RADIUS = 40; //TODO: set radius
+  public static final int BONUS_RADIUS = 40; //TODO: set radius
+  public static final int BONUS_ATTACK_RADIUS = 100;
   public static int BONUS_SPEED = 50; //TODO: set speed
   public static int BONUS_SPAWN_INTERVAL = 5; //TODO: set interval
   public static final Vector2D BONUS_START_VECTOR = new Vector2D(GameSettings.BONUS_RADIUS,
@@ -28,4 +29,9 @@ public class GameSettings {
   public static int BONUS_HEALTH = 15;
   public static final int BONUS_MAX_UNITS = 3;
   public static int BONUS_START_COUNTER = -5;
+
+  public static final int SPIKE_LENGTH = 15;
+  public static final Vector2D SPIKE_START_VECTOR = new Vector2D(0.0,
+                                                                 GameSettings.WORLD_HEIGHT);
+  public static final int AMOUNT_OF_SPIKES = WORLD_WIDTH / (2*SPIKE_LENGTH);
 }

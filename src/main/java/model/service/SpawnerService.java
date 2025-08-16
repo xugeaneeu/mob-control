@@ -1,10 +1,7 @@
 package model.service;
 
 import model.GameModel;
-import model.entity.Bonus;
-import model.entity.Enemy;
-import model.entity.Entity;
-import model.entity.Unit;
+import model.entity.*;
 import util.BonusType;
 import util.GameSettings;
 import util.Vector2D;
@@ -91,6 +88,16 @@ public class SpawnerService {
   public void initSpawn() {
     int initAmountOfUnits = GameSettings.INIT_UNITS; //TODO: get from game state (specified by level)
     spawnUnits(initAmountOfUnits);
+    spawnSpikes();
+  }
+
+  private void spawnSpikes() {
+    for (int i = 0; i < GameSettings.AMOUNT_OF_SPIKES; i++) {
+      Vector2D offset = new Vector2D(i*GameSettings.SPIKE_LENGTH, 0);
+      Vector2D pos = GameSettings.SPIKE_START_VECTOR.add(offset);
+      Entity spike = new SpikeWall(pos, model.getEventBus());
+      model.addEntity(spike);
+    }
   }
 
   private void relocateUnits() {

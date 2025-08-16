@@ -1,6 +1,8 @@
 package model.service;
 
 import model.entity.*;
+import util.BonusType;
+import util.Vector2D;
 import util.event.EventBus;
 import util.event.RelocateEvent;
 
@@ -69,9 +71,32 @@ public class CollisionService {
         }
         if (e2 instanceof Unit un && e1 instanceof Bonus bn) {
           bn.applyBonus(un);
+          continue;
+        }
+
+        //Bonus vs SpikeWall
+        if (e1 instanceof Bonus bn && e2 instanceof SpikeWall) {
+          processBonusPop(entities, bn);
+          bn.toDestroy();
+          continue;
+        }
+        if (e2 instanceof Bonus bn && e1 instanceof SpikeWall) {
+          processBonusPop(entities, bn);
+          bn.toDestroy();
         }
       }
     }
+  }
+
+  private void processBonusPop(List<Entity> entities, Bonus bn) {
+    Entity e = new Bonus(bn.getPosition(), Vector2D.zeroVector(), eventBus, BonusType.ATTACK_BONUS);
+    for (Entity entity : entities) {
+      if (entity.isAlive() && entity instanceof Unit un && collide(e,un)) {
+        un.toDestroy();
+        eventBus.publish(new RelocateEvent());
+      }
+    }
+    e.toDestroy();
   }
 
   private boolean collide(Entity e1, Entity e2) {
