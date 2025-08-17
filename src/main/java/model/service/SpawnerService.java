@@ -86,7 +86,7 @@ public class SpawnerService {
   }
 
   public void initSpawn() {
-    int initAmountOfUnits = GameSettings.INIT_UNITS; //TODO: get from game state (specified by level)
+    int initAmountOfUnits = GameSettings.INIT_UNITS;
     spawnUnits(initAmountOfUnits);
     spawnSpikes();
     spawnChainsaws();
@@ -143,7 +143,13 @@ public class SpawnerService {
     bonusSpawnAccumulator += dt;
     if (bonusSpawnAccumulator >= GameSettings.BONUS_SPAWN_INTERVAL) {
       bonusSpawnAccumulator -= GameSettings.BONUS_SPAWN_INTERVAL;
-      BonusType nextBonus = rnd.nextBoolean() ? BonusType.INCREASE_FIRE_RATE : BonusType.ADD_UNIT;
+      BonusType nextBonus = switch (rnd.nextInt(3)) {
+        case 0 -> BonusType.ADD_UNIT;
+        case 1 -> BonusType.INCREASE_FIRE_RATE;
+        case 2 -> BonusType.INCREASE_BULLET_DAMAGE;
+        default -> throw new IllegalStateException("Unexpected value");
+      };
+
       spawnBonus(nextBonus);
     }
 

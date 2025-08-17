@@ -61,6 +61,12 @@ public class GameModel {
       }
     });
 
+    eventBus.addSubscriber(event -> {
+      if (event instanceof IncreaseBulletDamage) {
+        GameSettings.BULLET_DAMAGE++;
+      }
+    });
+
     spawner.initSpawn();
   }
 
@@ -89,7 +95,7 @@ public class GameModel {
     waveAccumulator += dt;
     if (waveAccumulator >= GameSettings.WAVE_INTERVAL) {
       GameSettings.ENEMY_HEALTH++;
-      GameSettings.UNIT_HEALTH++; //TODO: сомнительное решение, здоровье лучше только у новых
+      GameSettings.UNIT_HEALTH++;
       wave++;
       waveAccumulator -= GameSettings.WAVE_INTERVAL;
     }

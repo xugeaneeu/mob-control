@@ -21,6 +21,9 @@ public class Bonus extends Entity {
         break;
       case ATTACK_BONUS:
         this.radius = GameSettings.BONUS_ATTACK_RADIUS;
+        break;
+      case INCREASE_BULLET_DAMAGE:
+        this.health = GameSettings.DAMAGE_BONUS_HEALTH;
     }
   }
 
@@ -32,7 +35,7 @@ public class Bonus extends Entity {
   @Override
   public void decreaseHealth(int damage) {
     health += damage;
-    if (type == BonusType.INCREASE_FIRE_RATE && health >= GameSettings.BONUS_HEALTH) {
+    if (type == BonusType.INCREASE_FIRE_RATE && health >= GameSettings.FIRE_RATE_BONUS_HEALTH) {
       eventBus.publish(new IncreaseFireRateEvent());
       this.toDestroy();
       return;
@@ -40,13 +43,19 @@ public class Bonus extends Entity {
 
     if (type == BonusType.ADD_UNIT && health >= GameSettings.BONUS_MAX_UNITS) {
       health = GameSettings.BONUS_MAX_UNITS;
+      return;
+    }
+
+    if (type == BonusType.INCREASE_BULLET_DAMAGE && health >= GameSettings.DAMAGE_BONUS_HEALTH) {
+      eventBus.publish(new IncreaseBulletDamage());
+      this.toDestroy();
     }
   }
 
   public void applyBonus(Unit un) {
     switch (type) {
-      case INCREASE_FIRE_RATE:
-        if (health < GameSettings.BONUS_HEALTH) {
+      case INCREASE_FIRE_RATE, INCREASE_BULLET_DAMAGE:
+        if (health < GameSettings.FIRE_RATE_BONUS_HEALTH) {
           un.toDestroy();
           eventBus.publish(new RelocateEvent());
         }

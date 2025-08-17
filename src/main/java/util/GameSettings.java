@@ -29,7 +29,8 @@ public class GameSettings {
   public static int BONUS_SPAWN_INTERVAL = 5;
   public static final Vector2D BONUS_START_VECTOR = new Vector2D(GameSettings.BONUS_RADIUS,
                                                                  GameSettings.BONUS_RADIUS);
-  public static int BONUS_HEALTH = 15;
+  public static int FIRE_RATE_BONUS_HEALTH = 15;
+  public static int DAMAGE_BONUS_HEALTH = 20;
   public static final int BONUS_MAX_UNITS = 3;
   public static int BONUS_START_COUNTER = -5;
 

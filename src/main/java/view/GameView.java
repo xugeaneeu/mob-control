@@ -36,6 +36,7 @@ public class GameView {
       if (e instanceof Bullet) gc.setFill(Color.YELLOW);
       if (e instanceof Bonus b && b.type == BonusType.ADD_UNIT)  gc.setFill(Color.BLUE);
       if (e instanceof Bonus b && b.type == BonusType.INCREASE_FIRE_RATE)  gc.setFill(Color.PURPLE);
+      if (e instanceof Bonus b && b.type == BonusType.INCREASE_BULLET_DAMAGE)  gc.setFill(Color.YELLOW);
       Vector2D p = e.getPosition();
       double r = e.getRadius();
       gc.fillOval(p.x() - r, p.y() - r, r*2, r*2);
