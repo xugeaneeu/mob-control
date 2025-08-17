@@ -11,7 +11,7 @@ public class Unit extends Entity {
   private double shootTimer = 0.0;
 
   public Unit(Vector2D startPos, EventBus bus) {
-    super(startPos, GameSettings.UNIT_RADIUS, bus);
+    super(startPos, GameSettings.UNIT_RADIUS, GameSettings.UNIT_HEALTH, bus);
   }
 
   public void setDirection(Direction direction) {
@@ -28,5 +28,10 @@ public class Unit extends Entity {
       eventBus.publish(new ShootEvent(position, new Vector2D(0, -GameSettings.BULLET_SPEED)));
       shootTimer -= GameSettings.SHOOT_INTERVAL;
     }
+  }
+
+  @Override
+  public void decreaseHealth(int damage) {
+    health -= damage;
   }
 }

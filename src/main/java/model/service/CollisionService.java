@@ -28,39 +28,35 @@ public class CollisionService {
 
         //Bullet vs Enemy
         if (e1 instanceof Bullet bl && e2 instanceof Enemy en) {
-          bl.toDestroy();
-          en.toDestroy();
+          processHealthIssue(bl, en);
           continue;
         }
         if (e2 instanceof Bullet bl && e1 instanceof Enemy en) {
-          bl.toDestroy();
-          en.toDestroy();
+          processHealthIssue(bl, en);
           continue;
         }
 
         //Unit vs Enemy
         if (e1 instanceof Unit un && e2 instanceof Enemy en ) {
-          un.toDestroy();
-          en.toDestroy();
-          eventBus.publish(new RelocateEvent());
+          processHealthIssue(un, en);
+          if (!un.isAlive()) eventBus.publish(new RelocateEvent());
           continue;
         }
         if (e2 instanceof Unit un && e1 instanceof Enemy en ) {
-          un.toDestroy();
-          en.toDestroy();
-          eventBus.publish(new RelocateEvent());
+          processHealthIssue(un, en);
+          if (!un.isAlive()) eventBus.publish(new RelocateEvent());
           continue;
         }
 
         //Bullet vs Bonus
         if (e1 instanceof Bullet bl && e2 instanceof Bonus bn) {
-          bn.incrementCounter(bl.getDamage());
-          e1.toDestroy();
+          bn.decreaseHealth(bl.getHealth());
+          bl.toDestroy();
           continue;
         }
         if (e2 instanceof Bullet bl && e1 instanceof Bonus bn) {
-          bn.incrementCounter(bl.getDamage());
-          e2.toDestroy();
+          bn.decreaseHealth(bl.getHealth());
+          bl.toDestroy();
           continue;
         }
 
@@ -86,7 +82,7 @@ public class CollisionService {
           continue;
         }
 
-        //Unit vs chainsaw
+        //Unit vs Chainsaw
         if (e1 instanceof Unit un && e2 instanceof Chainsaw) {
           un.toDestroy();
           eventBus.publish(new RelocateEvent());
@@ -97,6 +93,17 @@ public class CollisionService {
           eventBus.publish(new RelocateEvent());
         }
       }
+    }
+  }
+
+  private static void processHealthIssue(Entity e1, Entity e2) {
+    if (e1.getHealth() >= e2.getHealth()) {
+      e1.decreaseHealth(e2.getHealth());
+      if (e1.getHealth() == 0) e1.toDestroy();
+      e2.toDestroy();
+    } else {
+      e2.decreaseHealth(e1.getHealth());
+      e1.toDestroy();
     }
   }
 

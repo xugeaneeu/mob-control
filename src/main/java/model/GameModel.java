@@ -17,6 +17,9 @@ public class GameModel {
   SpawnerService spawner = new SpawnerService(this);
   CollisionService collision = new CollisionService(eventBus);
 
+  private double waveAccumulator = 0.0;
+  private int wave = 1;
+
   public GameModel() {
     eventBus.addSubscriber(event -> {
       if (event instanceof ShootEvent se) {
@@ -82,7 +85,18 @@ public class GameModel {
 
   public EventBus getEventBus() {return eventBus;}
 
+  private void updateWaves(double dt) {
+    waveAccumulator += dt;
+    if (waveAccumulator >= GameSettings.WAVE_INTERVAL) {
+      GameSettings.ENEMY_HEALTH++;
+      GameSettings.UNIT_HEALTH++; //TODO: сомнительное решение, здоровье лучше только у новых
+      wave++;
+      waveAccumulator -= GameSettings.WAVE_INTERVAL;
+    }
+  }
+
   public void update(double dt) {
+    updateWaves(dt);
     spawner.update(dt);
 
     for (Entity entity : new ArrayList<>(entities)) {

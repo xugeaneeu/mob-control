@@ -7,7 +7,7 @@ import util.event.EventBus;
 public class Bullet extends Entity {
 
   public Bullet(Vector2D pos, Vector2D vel, EventBus bus) {
-    super(pos, GameSettings.BULLET_RADIUS, bus);
+    super(pos, GameSettings.BULLET_RADIUS, GameSettings.BULLET_DAMAGE, bus);
     this.velocity = vel;
   }
 
@@ -18,8 +18,8 @@ public class Bullet extends Entity {
     }
   }
 
-  //TODO: refactor later according to bullet level
-  public int getDamage() {
-    return GameSettings.BULLET_DAMAGE;
+  @Override
+  public void decreaseHealth(int damage) {
+    health -= damage;
   }
 }

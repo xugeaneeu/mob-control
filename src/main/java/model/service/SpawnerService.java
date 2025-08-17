@@ -93,8 +93,10 @@ public class SpawnerService {
   }
 
   private void spawnChainsaws() {
-    Vector2D posLeft  = new Vector2D(0, GameSettings.WORLD_HEIGHT - GameSettings.CASTLE_RADIUS);
-    Vector2D posRight = new Vector2D(GameSettings.WORLD_WIDTH, GameSettings.WORLD_HEIGHT - GameSettings.CASTLE_RADIUS);
+    Vector2D posLeft  = new Vector2D(0,
+                                  GameSettings.WORLD_HEIGHT - GameSettings.CASTLE_RADIUS - GameSettings.CHAINSAW_LENGTH);
+    Vector2D posRight = new Vector2D(GameSettings.WORLD_WIDTH,
+                                  GameSettings.WORLD_HEIGHT - GameSettings.CASTLE_RADIUS - GameSettings.CHAINSAW_LENGTH);
 
     Vector2D offset = new Vector2D(0, -GameSettings.CHAINSAW_LENGTH);
     while (posLeft.y() > GameSettings.UNIT_START_VECTOR.y()) {
