@@ -34,4 +34,8 @@ public class GameSettings {
   public static final Vector2D SPIKE_START_VECTOR = new Vector2D(0.0,
                                                                  GameSettings.WORLD_HEIGHT);
   public static final int AMOUNT_OF_SPIKES = WORLD_WIDTH / (2*SPIKE_LENGTH);
+
+  public static final int CHAINSAW_LENGTH = 20;
+
+  public static final int CASTLE_RADIUS = 20;
 }

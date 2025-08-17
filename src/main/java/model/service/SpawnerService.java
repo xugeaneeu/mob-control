@@ -89,6 +89,22 @@ public class SpawnerService {
     int initAmountOfUnits = GameSettings.INIT_UNITS; //TODO: get from game state (specified by level)
     spawnUnits(initAmountOfUnits);
     spawnSpikes();
+    spawnChainsaws();
+  }
+
+  private void spawnChainsaws() {
+    Vector2D posLeft  = new Vector2D(0, GameSettings.WORLD_HEIGHT - GameSettings.CASTLE_RADIUS);
+    Vector2D posRight = new Vector2D(GameSettings.WORLD_WIDTH, GameSettings.WORLD_HEIGHT - GameSettings.CASTLE_RADIUS);
+
+    Vector2D offset = new Vector2D(0, -GameSettings.CHAINSAW_LENGTH);
+    while (posLeft.y() > GameSettings.UNIT_START_VECTOR.y()) {
+      Entity e1 = new Chainsaw(posLeft.add(offset), model.getEventBus());
+      Entity e2 = new Chainsaw(posRight.add(offset), model.getEventBus());
+      model.addEntity(e1);
+      model.addEntity(e2);
+      posLeft = posLeft.add(offset);
+      posRight = posRight.add(offset);
+    }
   }
 
   private void spawnSpikes() {

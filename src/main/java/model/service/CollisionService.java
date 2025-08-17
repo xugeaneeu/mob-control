@@ -83,6 +83,18 @@ public class CollisionService {
         if (e2 instanceof Bonus bn && e1 instanceof SpikeWall) {
           processBonusPop(entities, bn);
           bn.toDestroy();
+          continue;
+        }
+
+        //Unit vs chainsaw
+        if (e1 instanceof Unit un && e2 instanceof Chainsaw) {
+          un.toDestroy();
+          eventBus.publish(new RelocateEvent());
+          continue;
+        }
+        if (e2 instanceof Unit un && e1 instanceof Chainsaw) {
+          un.toDestroy();
+          eventBus.publish(new RelocateEvent());
         }
       }
     }
