@@ -110,6 +110,9 @@ public class GameModel {
     if (waveAccumulator >= GameSettings.WAVE_INTERVAL) {
       GameSettings.ENEMY_HEALTH++;
       GameSettings.UNIT_HEALTH++;
+      GameSettings.HEALING_BONUS_HEALTH = (int) ((double) GameSettings.HEALING_BONUS_HEALTH/
+                                                          (GameSettings.ENEMY_HEALTH - 1)*
+                                                          GameSettings.ENEMY_HEALTH);
       wave++;
       waveAccumulator -= GameSettings.WAVE_INTERVAL;
     }
