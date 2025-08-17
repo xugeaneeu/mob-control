@@ -90,13 +90,21 @@ public class SpawnerService {
     spawnUnits(initAmountOfUnits);
     spawnSpikes();
     spawnChainsaws();
+    spawnCastle();
+  }
+
+  private void spawnCastle() {
+    //Upper left corner of castle
+    Vector2D startPos = new Vector2D((double) GameSettings.WORLD_WIDTH /2,
+                                      GameSettings.WORLD_HEIGHT - GameSettings.CASTLE_LENGTH);
+    model.addEntity(new Castle(startPos, model.getEventBus()));
   }
 
   private void spawnChainsaws() {
     Vector2D posLeft  = new Vector2D(0,
-                                  GameSettings.WORLD_HEIGHT - GameSettings.CASTLE_RADIUS - GameSettings.CHAINSAW_LENGTH);
+                                  GameSettings.WORLD_HEIGHT - GameSettings.CASTLE_LENGTH - GameSettings.CHAINSAW_LENGTH);
     Vector2D posRight = new Vector2D(GameSettings.WORLD_WIDTH,
-                                  GameSettings.WORLD_HEIGHT - GameSettings.CASTLE_RADIUS - GameSettings.CHAINSAW_LENGTH);
+                                  GameSettings.WORLD_HEIGHT - GameSettings.CASTLE_LENGTH - GameSettings.CHAINSAW_LENGTH);
 
     Vector2D offset = new Vector2D(0, -GameSettings.CHAINSAW_LENGTH);
     while (posLeft.y() > GameSettings.UNIT_START_VECTOR.y()) {
@@ -122,6 +130,7 @@ public class SpawnerService {
     int amountOfUnits = model.countUnits();
     if (amountOfUnits == 0) {
       model.getEventBus().publish(new GameOverEvent());
+      return;
     }
     Vector2D headPos = model.getHeadUnit().getPosition();
 
@@ -143,10 +152,11 @@ public class SpawnerService {
     bonusSpawnAccumulator += dt;
     if (bonusSpawnAccumulator >= GameSettings.BONUS_SPAWN_INTERVAL) {
       bonusSpawnAccumulator -= GameSettings.BONUS_SPAWN_INTERVAL;
-      BonusType nextBonus = switch (rnd.nextInt(3)) {
+      BonusType nextBonus = switch (rnd.nextInt(4)) {
         case 0 -> BonusType.ADD_UNIT;
         case 1 -> BonusType.INCREASE_FIRE_RATE;
         case 2 -> BonusType.INCREASE_BULLET_DAMAGE;
+        case 3 -> BonusType.HEALING_BONUS;
         default -> throw new IllegalStateException("Unexpected value");
       };
 

@@ -37,6 +37,14 @@ public class GameView {
       if (e instanceof Bonus b && b.type == BonusType.ADD_UNIT)  gc.setFill(Color.BLUE);
       if (e instanceof Bonus b && b.type == BonusType.INCREASE_FIRE_RATE)  gc.setFill(Color.PURPLE);
       if (e instanceof Bonus b && b.type == BonusType.INCREASE_BULLET_DAMAGE)  gc.setFill(Color.YELLOW);
+      if (e instanceof Bonus b && b.type == BonusType.HEALING_BONUS)  gc.setFill(Color.WHITE);
+      if (e instanceof Castle) {
+        gc.setFill(Color.BLUE);
+        Vector2D pos = e.getPosition();
+        gc.fillRect(pos.x(), pos.y(), GameSettings.CASTLE_WIDTH, GameSettings.CASTLE_LENGTH);
+        continue;
+      }
+
       Vector2D p = e.getPosition();
       double r = e.getRadius();
       gc.fillOval(p.x() - r, p.y() - r, r*2, r*2);

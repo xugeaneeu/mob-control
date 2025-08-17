@@ -31,6 +31,7 @@ public class GameSettings {
                                                                  GameSettings.BONUS_RADIUS);
   public static int FIRE_RATE_BONUS_HEALTH = 15;
   public static int DAMAGE_BONUS_HEALTH = 20;
+  public static int HEALING_BONUS_HEALTH = 5;
   public static final int BONUS_MAX_UNITS = 3;
   public static int BONUS_START_COUNTER = -5;
 
@@ -41,7 +42,8 @@ public class GameSettings {
 
   public static final int CHAINSAW_LENGTH = 20;
 
-  public static final int CASTLE_RADIUS = 20;
+  public static final int CASTLE_LENGTH = 20;
+  public static final int CASTLE_WIDTH = GameSettings.WORLD_WIDTH/2;
   public static final int CASTLE_HEALTH = 15;
 
   public static final int BUILDINGS_HEALTH = 1;

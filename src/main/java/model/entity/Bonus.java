@@ -13,7 +13,7 @@ public class Bonus extends Entity {
     this.velocity = vel;
     this.type = type;
     switch (type) {
-      case INCREASE_FIRE_RATE:
+      case INCREASE_FIRE_RATE, INCREASE_BULLET_DAMAGE, HEALING_BONUS:
         health = 0;
         break;
       case ADD_UNIT:
@@ -22,8 +22,6 @@ public class Bonus extends Entity {
       case ATTACK_BONUS:
         this.radius = GameSettings.BONUS_ATTACK_RADIUS;
         break;
-      case INCREASE_BULLET_DAMAGE:
-        this.health = GameSettings.DAMAGE_BONUS_HEALTH;
     }
   }
 
@@ -47,7 +45,13 @@ public class Bonus extends Entity {
     }
 
     if (type == BonusType.INCREASE_BULLET_DAMAGE && health >= GameSettings.DAMAGE_BONUS_HEALTH) {
-      eventBus.publish(new IncreaseBulletDamage());
+      eventBus.publish(new IncreaseBulletDamageEvent());
+      this.toDestroy();
+      return;
+    }
+
+    if (type == BonusType.HEALING_BONUS && health >= GameSettings.HEALING_BONUS_HEALTH) {
+      eventBus.publish(new HealCastleEvent(health));
       this.toDestroy();
     }
   }

@@ -1,6 +1,7 @@
 package model;
 
 import model.entity.Bullet;
+import model.entity.Castle;
 import model.entity.Entity;
 import model.entity.Unit;
 import model.service.CollisionService;
@@ -62,8 +63,14 @@ public class GameModel {
     });
 
     eventBus.addSubscriber(event -> {
-      if (event instanceof IncreaseBulletDamage) {
+      if (event instanceof IncreaseBulletDamageEvent) {
         GameSettings.BULLET_DAMAGE++;
+      }
+    });
+
+    eventBus.addSubscriber(event -> {
+      if (event instanceof HealCastleEvent hce) {
+        getCastle().decreaseHealth(-hce.amountHP);
       }
     });
 
@@ -77,6 +84,13 @@ public class GameModel {
   public Entity getHeadUnit() {
     for (Entity e : entities) {
       if (e instanceof Unit) {return e;}
+    }
+    return null;
+  }
+
+  public Castle getCastle() {
+    for (Entity e : entities) {
+      if (e instanceof Castle) {return (Castle) e;}
     }
     return null;
   }
