@@ -4,7 +4,7 @@ import util.Direction;
 import util.GameSettings;
 import util.Vector2D;
 import util.event.EventBus;
-import util.event.ShootEvent;
+import util.event.game.ShootEvent;
 
 public class Unit extends Entity {
   private Direction direction = Direction.NONE;

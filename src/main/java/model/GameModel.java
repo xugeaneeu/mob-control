@@ -8,20 +8,26 @@ import model.service.CollisionService;
 import model.service.SpawnerService;
 import util.GameSettings;
 import util.event.*;
+import util.event.game.*;
+import util.event.state.GameOverEvent;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class GameModel {
   private final List<Entity> entities = new ArrayList<>();
-  private final EventBus eventBus = new EventBus();
-  SpawnerService spawner = new SpawnerService(this);
-  CollisionService collision = new CollisionService(eventBus);
+  private final EventBus eventBus;
+  SpawnerService spawner;
+  CollisionService collision;
 
   private double waveAccumulator = 0.0;
   private int wave = 1;
 
-  public GameModel() {
+  public GameModel(EventBus eventBus) {
+    this.eventBus = eventBus;
+    collision = new CollisionService(eventBus);
+    spawner = new SpawnerService(this);
+
     eventBus.addSubscriber(event -> {
       if (event instanceof ShootEvent se) {
         addEntity(new Bullet(se.position, se.velocity, eventBus));

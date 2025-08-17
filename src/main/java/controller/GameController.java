@@ -1,43 +1,45 @@
 package controller;
 
+import controller.state.GameState;
+import controller.state.StateMachine;
+import controller.state.StateType;
+import controller.state.StatisticState;
 import javafx.animation.AnimationTimer;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import model.GameModel;
-import model.entity.Unit;
-import util.Direction;
+import util.GameStatistic;
+import util.event.EventBus;
+import util.event.state.StartGameEvent;
 import view.GameView;
 
 public class GameController {
-  private final GameModel model;
   private final GameView view;
+  private final EventBus eventBus;
+  private final StateMachine stateMachine;
   private boolean left, right;
 
   public GameController() {
-    model = new GameModel();
-    view = new GameView(model);
+    eventBus = new EventBus();
+    stateMachine = new StateMachine(eventBus);
+    view = new GameView(eventBus);
   }
+
+  public GameView getView() {return view;}
 
   public void initInputHandlers(Scene scene) {
     scene.setOnKeyPressed(e -> {
       if (e.getCode() == KeyCode.LEFT) {left = true;}
       if (e.getCode() == KeyCode.RIGHT) {right = true;}
+      if (e.getCode() == KeyCode.SPACE && stateMachine.getCurrentType() == StateType.MENU) {
+        eventBus.publish(new StartGameEvent());
+      }
     });
 
     scene.setOnKeyReleased(e -> {
       if (e.getCode() == KeyCode.LEFT) {left = false;}
       if (e.getCode() == KeyCode.RIGHT) {right = false;}
     });
-  }
-
-  public void processInput() {
-    Direction dir = left ? Direction.LEFT
-            : right ? Direction.RIGHT
-            : Direction.NONE;
-    model.getEntities().stream()
-            .filter(e -> e instanceof Unit)
-            .map(e -> (Unit) e)
-            .forEach(u -> u.setDirection(dir));
   }
 
   public void startGameLoop() {
@@ -49,13 +51,27 @@ public class GameController {
         double dt = (now - prevTime) / 1e9;
         prevTime = now;
 
-        processInput();
+        if (stateMachine.getCurrentType() == StateType.GAME) {
+          GameState gameState = (GameState) stateMachine.getCurrentState();
+          gameState.handleInput(left, right);
+        }
 
-        model.update(dt);
-        view.render();
+        stateMachine.update(dt);
+
+        StateType st = stateMachine.getCurrentType();
+        GameModel modelForRender = null;
+        GameStatistic statsForRender = null;
+
+        if (st == StateType.GAME) {
+          modelForRender = ((GameState) stateMachine.getCurrentState()).getModel();
+        } else if (st == StateType.STATISTICS) {
+          statsForRender =
+                  ((StatisticState) stateMachine.getCurrentState()).getStats();
+        }
+
+        view.render(st, modelForRender, statsForRender);
       }
     }.start();
   }
 
-  public GameView getView() {return view;}
 }

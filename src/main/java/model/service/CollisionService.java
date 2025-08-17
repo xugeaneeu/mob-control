@@ -3,10 +3,11 @@ package model.service;
 import model.entity.*;
 import util.BonusType;
 import util.GameSettings;
+import util.GameStatistic;
 import util.Vector2D;
 import util.event.EventBus;
-import util.event.GameOverEvent;
-import util.event.RelocateEvent;
+import util.event.state.GameOverEvent;
+import util.event.game.RelocateEvent;
 
 import java.util.List;
 
@@ -32,12 +33,12 @@ public class CollisionService {
 
           if (e1 instanceof Castle cl && e2 instanceof Enemy en) {
             processHealthIssue(e1, e2);
-            if (!cl.isAlive()) eventBus.publish(new GameOverEvent());
+            if (!cl.isAlive()) eventBus.publish(new GameOverEvent(new GameStatistic()));
             continue;
           }
           if (e2 instanceof Castle cl && e1 instanceof Enemy) {
             processHealthIssue(e1, e2);
-            if (!cl.isAlive()) eventBus.publish(new GameOverEvent());
+            if (!cl.isAlive()) eventBus.publish(new GameOverEvent(new GameStatistic()));
           }
 
           continue;

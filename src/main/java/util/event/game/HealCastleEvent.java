@@ -1,4 +1,6 @@
-package util.event;
+package util.event.game;
+
+import util.event.GameEvent;
 
 public class HealCastleEvent implements GameEvent {
   public final int amountHP;

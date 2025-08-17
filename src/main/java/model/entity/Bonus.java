@@ -3,7 +3,8 @@ package model.entity;
 import util.BonusType;
 import util.GameSettings;
 import util.Vector2D;
-import util.event.*;
+import util.event.EventBus;
+import util.event.game.*;
 
 public class Bonus extends Entity {
   public final BonusType type;

@@ -1,6 +1,7 @@
-package util.event;
+package util.event.game;
 
 import util.Vector2D;
+import util.event.GameEvent;
 
 public class ShootEvent implements GameEvent {
   public final Vector2D position;

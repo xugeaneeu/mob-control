@@ -9,16 +9,19 @@ import model.entity.*;
 import util.BonusType;
 import util.GameSettings;
 import util.Vector2D;
+import util.event.EventBus;
 
 public class GameView {
   private final Pane root = new Pane();
   private final Canvas canvas = new Canvas(
           GameSettings.WORLD_WIDTH, GameSettings.WORLD_HEIGHT);
   private final GraphicsContext gc = canvas.getGraphicsContext2D();
-  private final GameModel model;
 
-  public GameView(GameModel model) {
-    this.model = model;
+  private final MenuView menuView;
+  private final StatsView statsView;
+
+  public GameView(EventBus eventBus) {
+
     root.getChildren().add(canvas);
   }
 

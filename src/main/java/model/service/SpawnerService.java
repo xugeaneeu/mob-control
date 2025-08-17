@@ -4,9 +4,10 @@ import model.GameModel;
 import model.entity.*;
 import util.BonusType;
 import util.GameSettings;
+import util.GameStatistic;
 import util.Vector2D;
-import util.event.GameOverEvent;
-import util.event.RelocateEvent;
+import util.event.state.GameOverEvent;
+import util.event.game.RelocateEvent;
 
 import java.util.Random;
 
@@ -129,7 +130,7 @@ public class SpawnerService {
   private void relocateUnits() {
     int amountOfUnits = model.countUnits();
     if (amountOfUnits == 0) {
-      model.getEventBus().publish(new GameOverEvent());
+      model.getEventBus().publish(new GameOverEvent(new GameStatistic()));
       return;
     }
     Vector2D headPos = model.getHeadUnit().getPosition();
