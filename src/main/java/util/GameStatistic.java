@@ -1,5 +1,3 @@
 package util;
 
-public class GameStatistic {
-  // TODO: поля со статистикой, инициализированные из GameSettings
-}
+public record GameStatistic (double time, long enemyScore, long bonusScore,long bulletLevel){ }

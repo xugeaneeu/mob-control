@@ -4,6 +4,7 @@ import model.GameModel;
 import model.entity.Entity;
 import model.entity.Unit;
 import util.Direction;
+import util.GameSettings;
 import util.event.EventBus;
 
 public class GameState implements IState{
@@ -27,6 +28,8 @@ public class GameState implements IState{
 
   @Override
   public void onExit() {
+    GameSettings.toDefaults();
+    model.statsToDefaults();
     model = null;
   }
 

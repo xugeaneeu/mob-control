@@ -1,5 +1,6 @@
 package model.service;
 
+import model.GameModel;
 import model.entity.*;
 import util.BonusType;
 import util.GameSettings;
@@ -31,14 +32,20 @@ public class CollisionService {
         if (e2 instanceof Castle || e1 instanceof Castle) {
           if (!e2.isAlive() || !collideCircleRectangle(e1,e2)) continue;
 
-          if (e1 instanceof Castle cl && e2 instanceof Enemy en) {
+          if (e1 instanceof Castle cl && e2 instanceof Enemy) {
             processHealthIssue(e1, e2);
-            if (!cl.isAlive()) eventBus.publish(new GameOverEvent(new GameStatistic()));
+            if (!cl.isAlive()) eventBus.publish(new GameOverEvent(new GameStatistic(GameModel.getTime(),
+                                                                                    GameModel.getEnemyScore(),
+                                                                                    GameModel.getBonusScore(),
+                                                                                    GameSettings.BULLET_DAMAGE)));
             continue;
           }
           if (e2 instanceof Castle cl && e1 instanceof Enemy) {
             processHealthIssue(e1, e2);
-            if (!cl.isAlive()) eventBus.publish(new GameOverEvent(new GameStatistic()));
+            if (!cl.isAlive()) eventBus.publish(new GameOverEvent(new GameStatistic(GameModel.getTime(),
+                                                                                    GameModel.getEnemyScore(),
+                                                                                    GameModel.getBonusScore(),
+                                                                                    GameSettings.BULLET_DAMAGE)));
           }
 
           continue;

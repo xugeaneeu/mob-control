@@ -1,61 +1,43 @@
 package view;
 
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
+import controller.state.StateType;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
 import model.GameModel;
-import model.entity.*;
-import util.BonusType;
-import util.GameSettings;
-import util.Vector2D;
+import util.GameStatistic;
 import util.event.EventBus;
 
 public class GameView {
   private final Pane root = new Pane();
-  private final Canvas canvas = new Canvas(
-          GameSettings.WORLD_WIDTH, GameSettings.WORLD_HEIGHT);
-  private final GraphicsContext gc = canvas.getGraphicsContext2D();
 
   private final MenuView menuView;
+  private final PlayView playView;
   private final StatsView statsView;
 
   public GameView(EventBus eventBus) {
+    menuView = new MenuView(eventBus);
+    playView = new PlayView();
+    statsView = new StatsView(eventBus);
 
-    root.getChildren().add(canvas);
+
+    root.getChildren().addAll(
+            menuView.getRoot(),
+            playView.getRoot(),
+            statsView.getRoot()
+    );
   }
 
   public Pane getRoot() { return root; }
 
-  public void render() {
-    // фон
-    gc.setFill(Color.BLACK);
-    gc.fillRect(0,0,canvas.getWidth(),canvas.getHeight());
+  public void render(StateType state, GameModel model, GameStatistic stats) {
+    menuView.getRoot().setVisible(state == StateType.MENU);
+    playView.getRoot().setVisible(state == StateType.GAME);
+    statsView.getRoot().setVisible(state == StateType.STATISTICS);
 
-    // все сущности
-    for (Entity e : model.getEntities()) {
-      if (e instanceof Unit)   gc.setFill(Color.GREEN);
-      if (e instanceof Enemy)  gc.setFill(Color.RED);
-      if (e instanceof Bullet) gc.setFill(Color.YELLOW);
-      if (e instanceof Bonus b && b.type == BonusType.ADD_UNIT)  gc.setFill(Color.BLUE);
-      if (e instanceof Bonus b && b.type == BonusType.INCREASE_FIRE_RATE)  gc.setFill(Color.PURPLE);
-      if (e instanceof Bonus b && b.type == BonusType.INCREASE_BULLET_DAMAGE)  gc.setFill(Color.YELLOW);
-      if (e instanceof Bonus b && b.type == BonusType.HEALING_BONUS)  gc.setFill(Color.WHITE);
-      if (e instanceof Castle) {
-        gc.setFill(Color.BLUE);
-        Vector2D pos = e.getPosition();
-        gc.fillRect(pos.x(), pos.y(), GameSettings.CASTLE_WIDTH, GameSettings.CASTLE_LENGTH);
-        continue;
-      }
-
-      Vector2D p = e.getPosition();
-      double r = e.getRadius();
-      gc.fillOval(p.x() - r, p.y() - r, r*2, r*2);
+    if (state == StateType.GAME && model != null) {
+      playView.render(model);
     }
-
-    // HUD (скоро будет в HUDView)
-    gc.setFill(Color.WHITE);
-    gc.fillText("Units: " +
-            model.getEntities().stream().filter(e->e instanceof Unit).count(), 10,20);
+    if (state == StateType.STATISTICS && stats != null) {
+      statsView.render(stats);
+    }
   }
 }

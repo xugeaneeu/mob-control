@@ -48,7 +48,7 @@ public class GameSettings {
 
   public static final int BUILDINGS_HEALTH = 1;
 
-  public void toDefaults() {
+  static public void toDefaults() {
     double SHOOT_INTERVAL = 0.2;
     int UNIT_RADIUS = 10;
     int UNIT_HEALTH = 1;

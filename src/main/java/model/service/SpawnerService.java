@@ -24,13 +24,11 @@ public class SpawnerService {
     });
   }
 
-  private final double enemyDiameter = 2 * GameSettings.ENEMY_RADIUS;
   private final double unitDiameter = 2 * GameSettings.UNIT_RADIUS;
 
   private int curRow, curCol;
 
   private double enemySpawnAccumulator = 0.0;
-  private final double enemySpawnInterval = (double)(2 * GameSettings.ENEMY_RADIUS) / GameSettings.ENEMY_SPEED;
 
   private double bonusSpawnAccumulator = 0.0;
 
@@ -38,6 +36,7 @@ public class SpawnerService {
   private double relocationTimer = 0.0;
 
   public void spawnEnemyLine(GameModel model) {
+    double enemyDiameter = 2 * GameSettings.ENEMY_RADIUS;
     int count = (int) (GameSettings.WORLD_WIDTH * 0.5 / enemyDiameter);
 
     for (int i = 0; i < count; i++) {
@@ -130,7 +129,10 @@ public class SpawnerService {
   private void relocateUnits() {
     int amountOfUnits = model.countUnits();
     if (amountOfUnits == 0) {
-      model.getEventBus().publish(new GameOverEvent(new GameStatistic()));
+      model.getEventBus().publish(new GameOverEvent(new GameStatistic(GameModel.getTime(),
+                                                                      GameModel.getEnemyScore(),
+                                                                      GameModel.getBonusScore(),
+                                                                      GameSettings.BULLET_DAMAGE)));
       return;
     }
     Vector2D headPos = model.getHeadUnit().getPosition();
@@ -145,6 +147,7 @@ public class SpawnerService {
 
   public void update(double dt) {
     enemySpawnAccumulator += dt;
+    double enemySpawnInterval = (double) (2 * GameSettings.ENEMY_RADIUS) / GameSettings.ENEMY_SPEED;
     if (enemySpawnAccumulator >= enemySpawnInterval) {
       enemySpawnAccumulator -= enemySpawnInterval;
       spawnEnemyLine(model);

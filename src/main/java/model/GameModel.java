@@ -1,15 +1,11 @@
 package model;
 
-import model.entity.Bullet;
-import model.entity.Castle;
-import model.entity.Entity;
-import model.entity.Unit;
+import model.entity.*;
 import model.service.CollisionService;
 import model.service.SpawnerService;
 import util.GameSettings;
 import util.event.*;
 import util.event.game.*;
-import util.event.state.GameOverEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,8 +13,12 @@ import java.util.List;
 public class GameModel {
   private final List<Entity> entities = new ArrayList<>();
   private final EventBus eventBus;
-  SpawnerService spawner;
-  CollisionService collision;
+  private final SpawnerService spawner;
+  private final CollisionService collision;
+
+  private static double playTime = 0.0;
+  private static long enemyScore = 0;
+  private static long bonusScore = 0;
 
   private double waveAccumulator = 0.0;
   private int wave = 1;
@@ -37,20 +37,14 @@ public class GameModel {
     eventBus.addSubscriber(event -> {
       if (event instanceof IncreaseFireRateEvent) {
         GameSettings.BULLET_SPEED = (int) ((double)GameSettings.BULLET_SPEED * 1.1);
+        bonusScore++;
       }
     });
 
     eventBus.addSubscriber(event -> {
       if (event instanceof AddUnitsEvent auEvent) {
-        System.out.println("I will spawn " + auEvent.amountOfUnits + " units");
         spawner.spawnUnits(auEvent.amountOfUnits);
-      }
-    });
-
-    eventBus.addSubscriber(event -> {
-      if (event instanceof GameOverEvent) {
-        System.out.println("Game over");
-        // TODO: when state machine is ready, change state in GameController or MainApp idk
+        bonusScore++;
       }
     });
 
@@ -71,12 +65,14 @@ public class GameModel {
     eventBus.addSubscriber(event -> {
       if (event instanceof IncreaseBulletDamageEvent) {
         GameSettings.BULLET_DAMAGE++;
+        bonusScore++;
       }
     });
 
     eventBus.addSubscriber(event -> {
       if (event instanceof HealCastleEvent hce) {
         getCastle().decreaseHealth(-hce.amountHP);
+        bonusScore++;
       }
     });
 
@@ -110,6 +106,9 @@ public class GameModel {
   }
 
   public EventBus getEventBus() {return eventBus;}
+  static public double getTime() {return playTime;}
+  static public long getEnemyScore() {return enemyScore;}
+  static public long getBonusScore() {return bonusScore;}
 
   private void updateWaves(double dt) {
     waveAccumulator += dt;
@@ -126,6 +125,7 @@ public class GameModel {
 
   public void update(double dt) {
     updateWaves(dt);
+    playTime += dt;
     spawner.update(dt);
 
     for (Entity entity : new ArrayList<>(entities)) {
@@ -134,6 +134,24 @@ public class GameModel {
 
     collision.processCollision(entities);
 
-    entities.removeIf(entity -> !entity.isAlive());
+    cleanUpDead(entities);
+  }
+
+  private void cleanUpDead(List<Entity> entities) {
+    entities.removeIf(e -> {
+      if (!e.isAlive()) {
+        if (e instanceof Enemy en) {
+          enemyScore += en.startHealth;
+        }
+        return true;
+      }
+      return false;
+    });
+  }
+
+  public void statsToDefaults() {
+    playTime = 0.0;
+    enemyScore = 0;
+    bonusScore = 0;
   }
 }

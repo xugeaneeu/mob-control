@@ -1,11 +1,11 @@
 package util.event;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Consumer;
 
 public class EventBus {
-  private final List<Consumer<GameEvent>> subscribers = new ArrayList<>();
+  private final List<Consumer<GameEvent>> subscribers = new CopyOnWriteArrayList<>();
 
   public void addSubscriber(Consumer<GameEvent> subscriber) {
     subscribers.add(subscriber);

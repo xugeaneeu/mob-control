@@ -26,7 +26,7 @@ public class StateMachine {
         switchToState(StateType.GAME);
       } else if (event instanceof BackToMenuEvent) {
         switchToState(StateType.MENU);
-      } else if (event instanceof GameOverEvent goe) {
+      } else if (event instanceof GameOverEvent goe && currentStateType != StateType.STATISTICS) {
         StatisticState statistic = (StatisticState) states.get(StateType.STATISTICS);
         statistic.setStats(goe.getStats());
         switchToState(StateType.STATISTICS);
