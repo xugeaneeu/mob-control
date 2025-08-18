@@ -26,10 +26,10 @@ public class MenuView {
 
   public MenuView(EventBus bus) {
     root.setPrefSize(GameSettings.WORLD_WIDTH, GameSettings.WORLD_HEIGHT);
-    root.setStyle("-fx-background-color: white;");
+    root.setStyle("-fx-background-color: #bcb0b0;");
 
-    highScoreLabel.setText("High Score: " + best);
-    highScoreLabel.setTextFill(Color.GOLD);
+    highScoreLabel.setText("HIGH SCORE: " + best);
+    highScoreLabel.setStyle("-fx-text-fill: #8f7605;");
     highScoreLabel.setFont(Font.font("Verdana", 35));
 
     BorderPane.setMargin(highScoreLabel, new Insets(50, 0, 0, 0));
@@ -44,6 +44,7 @@ public class MenuView {
     root.setCenter(centerHolder);
 
     Button btnStart = new Button("START GAME");
+    btnStart.setStyle("-fx-background-color: #c6c5ae;");
     btnStart.setFont(Font.font("Verdana", 24));
     btnStart.setOnAction(_ -> bus.publish(new StartGameEvent()));
     btnStart.setPrefWidth(300);
@@ -57,7 +58,7 @@ public class MenuView {
         long newScore = goe.getStats().enemyScore();
         if (newScore > best) {
           best = newScore;
-          highScoreLabel.setText("High Score: " + best);
+          highScoreLabel.setText("HIGH SCORE: " + best);
           writeHighScoreToFile(best);
         }
       }
