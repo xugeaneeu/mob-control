@@ -4,6 +4,7 @@ import model.entity.*;
 import model.service.CollisionService;
 import model.service.SpawnerService;
 import util.GameSettings;
+import util.GameStatistic;
 import util.event.*;
 import util.event.game.*;
 
@@ -21,7 +22,6 @@ public class GameModel {
   private static long bonusScore = 0;
 
   private double waveAccumulator = 0.0;
-  private int wave = 1;
 
   public GameModel(EventBus eventBus) {
     this.eventBus = eventBus;
@@ -106,6 +106,9 @@ public class GameModel {
   }
 
   public EventBus getEventBus() {return eventBus;}
+  public GameStatistic getStatistic() {
+    return new GameStatistic(playTime, enemyScore, bonusScore, GameSettings.BULLET_DAMAGE);
+  }
   static public double getTime() {return playTime;}
   static public long getEnemyScore() {return enemyScore;}
   static public long getBonusScore() {return bonusScore;}
@@ -118,7 +121,6 @@ public class GameModel {
       GameSettings.HEALING_BONUS_HEALTH = (int) ((double) GameSettings.HEALING_BONUS_HEALTH/
                                                           (GameSettings.ENEMY_HEALTH - 1)*
                                                           GameSettings.ENEMY_HEALTH);
-      wave++;
       waveAccumulator -= GameSettings.WAVE_INTERVAL;
     }
   }

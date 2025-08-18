@@ -10,6 +10,7 @@ import javafx.scene.input.KeyCode;
 import model.GameModel;
 import util.GameStatistic;
 import util.event.EventBus;
+import util.event.state.GameOverEvent;
 import util.event.state.StartGameEvent;
 import view.GameView;
 
@@ -31,6 +32,12 @@ public class GameController {
     scene.setOnKeyPressed(e -> {
       if (e.getCode() == KeyCode.LEFT) {left = true;}
       if (e.getCode() == KeyCode.RIGHT) {right = true;}
+      if (e.getCode() == KeyCode.ESCAPE && stateMachine.getCurrentType() == StateType.GAME) {
+        GameState state = (GameState) stateMachine.getCurrentState();
+        GameModel model = state.getModel();
+        GameStatistic stats = model.getStatistic();
+        eventBus.publish(new GameOverEvent(stats));
+      }
       if (e.getCode() == KeyCode.SPACE && stateMachine.getCurrentType() == StateType.MENU) {
         eventBus.publish(new StartGameEvent());
       }
