@@ -39,7 +39,7 @@ public class SpawnerService {
     double enemyDiameter = 2 * GameSettings.ENEMY_RADIUS;
     int count = (int) (GameSettings.WORLD_WIDTH * 0.5 / enemyDiameter);
 
-    for (int i = 0; i < count; i++) {
+    for (int i = 0; i < count - 1; i++) {
       double x = (double) GameSettings.WORLD_WIDTH / 2 + i * enemyDiameter;
       Vector2D position = new Vector2D(x, 0);
       Vector2D velocity = new Vector2D(0, GameSettings.ENEMY_SPEED);

@@ -59,7 +59,7 @@ public class Bonus extends Entity {
 
   public void applyBonus(Unit un) {
     switch (type) {
-      case INCREASE_FIRE_RATE, INCREASE_BULLET_DAMAGE:
+      case INCREASE_FIRE_RATE, INCREASE_BULLET_DAMAGE, HEALING_BONUS:
         if (health < GameSettings.FIRE_RATE_BONUS_HEALTH) {
           un.toDestroy();
           eventBus.publish(new RelocateEvent());

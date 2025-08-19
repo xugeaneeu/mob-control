@@ -44,6 +44,10 @@ public class GameSettings {
 
   public static final int CASTLE_LENGTH = 20;
   public static final int CASTLE_WIDTH = GameSettings.WORLD_WIDTH/2;
+  public static final int TOWER_WIDTH = 96;
+  public static final int TOWER_HEIGHT = 100;
+  public static final int BETWEEN_TOWER_WIDTH = 205;
+  public static final int BETWEEN_TOWER_HEIGHT = 50;
   public static final int CASTLE_HEALTH = 15;
 
   public static final int BUILDINGS_HEALTH = 1;

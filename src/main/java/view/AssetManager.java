@@ -18,6 +18,8 @@ public class AssetManager {
     loadTexture("background", "/assets/background.png");
     loadTexture("castle", "/assets/castle.png");
     loadTexture("bullet", "/assets/bullet.png");
+    loadTexture("unit_sheets", "/assets/unit_sheets.png");
+    loadTexture("enemy_sheets", "/assets/enemy_sheets.png");
   }
 
   public Image getTexture(String name) {
