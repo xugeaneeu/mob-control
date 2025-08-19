@@ -126,6 +126,7 @@ public class GameModel {
   }
 
   public void update(double dt) {
+    cleanUpDead(entities);
     updateWaves(dt);
     playTime += dt;
     spawner.update(dt);
@@ -135,8 +136,6 @@ public class GameModel {
     }
 
     collision.processCollision(entities);
-
-    cleanUpDead(entities);
   }
 
   private void cleanUpDead(List<Entity> entities) {

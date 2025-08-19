@@ -31,7 +31,7 @@ public class GameSettings {
                                                                  GameSettings.BONUS_RADIUS);
   public static int FIRE_RATE_BONUS_HEALTH = 15;
   public static int DAMAGE_BONUS_HEALTH = 20;
-  public static int HEALING_BONUS_HEALTH = 5;
+  public static int HEALING_BONUS_HEALTH = 20;
   public static final int BONUS_MAX_UNITS = 3;
   public static int BONUS_START_COUNTER = -5;
 
@@ -47,6 +47,10 @@ public class GameSettings {
   public static final int CASTLE_HEALTH = 15;
 
   public static final int BUILDINGS_HEALTH = 1;
+
+  public static final double BAR_WIDTH  = 70;
+  public static final double BAR_HEIGHT = 5;
+
 
   static public void toDefaults() {
     double SHOOT_INTERVAL = 0.2;

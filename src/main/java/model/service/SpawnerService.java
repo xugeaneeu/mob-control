@@ -108,8 +108,8 @@ public class SpawnerService {
 
     Vector2D offset = new Vector2D(0, -GameSettings.CHAINSAW_LENGTH);
     while (posLeft.y() > GameSettings.UNIT_START_VECTOR.y()) {
-      Entity e1 = new Chainsaw(posLeft.add(offset), model.getEventBus());
-      Entity e2 = new Chainsaw(posRight.add(offset), model.getEventBus());
+      Entity e1 = new Sky(posLeft.add(offset), model.getEventBus());
+      Entity e2 = new Sky(posRight.add(offset), model.getEventBus());
       model.addEntity(e1);
       model.addEntity(e2);
       posLeft = posLeft.add(offset);

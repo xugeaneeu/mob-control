@@ -110,12 +110,12 @@ public class CollisionService {
         }
 
         //Unit vs Chainsaw
-        if (e1 instanceof Unit un && e2 instanceof Chainsaw) {
+        if (e1 instanceof Unit un && e2 instanceof Sky) {
           un.toDestroy();
           eventBus.publish(new RelocateEvent());
           continue;
         }
-        if (e2 instanceof Unit un && e1 instanceof Chainsaw) {
+        if (e2 instanceof Unit un && e1 instanceof Sky) {
           un.toDestroy();
           eventBus.publish(new RelocateEvent());
         }

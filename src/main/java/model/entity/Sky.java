@@ -4,9 +4,9 @@ import util.GameSettings;
 import util.Vector2D;
 import util.event.EventBus;
 
-public class Chainsaw extends Entity{
+public class Sky extends Entity{
 
-  public Chainsaw(Vector2D startPos, EventBus eventBus) {
+  public Sky(Vector2D startPos, EventBus eventBus) {
     super(startPos, GameSettings.CHAINSAW_LENGTH, GameSettings.BUILDINGS_HEALTH, eventBus);
   }
 
